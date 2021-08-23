@@ -183,15 +183,17 @@ public class AddressBookDAO implements AddressBookInterface {
         });
     }
 
+
     /*Purpose : Using Java Streams to search for Person in a City or State across the multiple AddressBook.
                 Maintain Dictionary of City and Person as well as State and Person
-                Finally view Persons by City or State
-      Dated : 03.07.2021
+                Finally get the count of Persons by City or State using java streams
+      @since : 06.07.2021
     */
 
     @Override
     public void searchPerson() {
         Hashtable<String, Hashtable<String, ArrayList<String>>> hSearch = new Hashtable<>();
+        AtomicInteger count = new AtomicInteger();
 
         System.out.println("Press 1 to search person by city");
         System.out.println("Press 2 to search person by state");
@@ -213,6 +215,7 @@ public class AddressBookDAO implements AddressBookInterface {
                         }
                         person.put(cityName , firstName);
                     }
+                    count.addAndGet((int)firstName.stream().count());
                     hSearch.put(entry , person);
                 });
 
@@ -232,11 +235,13 @@ public class AddressBookDAO implements AddressBookInterface {
                         }
                         person.put(stateName , firstName);
                     }
+                    count.addAndGet((int)firstName.stream().count());
                     hSearch.put(entry , person);
                 });
 
                 break;
         }
-        System.out.println(hSearch);
+        System.out.println("\nViewing Persons by City or State\n" +hSearch);
+        System.out.println("\nNumber of contact persons i.e. count by City or State is : " +count +"\n");
     }
 }
