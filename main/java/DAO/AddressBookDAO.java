@@ -3,10 +3,7 @@ package DAO;
 import AddressBookModel.PersonInfo;
 import AddressBookService.AddressBookInterface;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -15,6 +12,11 @@ public class AddressBookDAO implements AddressBookInterface {
     Hashtable<String, ArrayList<PersonInfo>> personInfoDict = new Hashtable<>();
     PersonInfo p = null;
     ArrayList<PersonInfo> pList = new ArrayList<>();
+
+     /*Purpose : Using Java Streams to search for duplicate contacts.
+                          If duplicate contact exist, then do not insert the contact details.
+       @since : 03.07.2021
+     */
 
     @Override
     public Hashtable<String, ArrayList<PersonInfo>> insertContactDetails() {
@@ -44,13 +46,7 @@ public class AddressBookDAO implements AddressBookInterface {
             ArrayList<PersonInfo> value = personInfoDict.get(addressBookName);
             for (int j = 0; j < value.size(); j++) {
 
-               /*Purpose : Using Java Streams to search for duplicate contacts.
-                          If duplicate contact exist, then do not insert the contact details.
-                Dated : 03.07.2021
-               */
-
                 List<String> names = value.stream().map(PersonInfo::getFirst_name).collect(Collectors.toList());
-
                 for ( int k = 0; k < names.size(); k++)  {
                     if(names.get(j).equals(p.getFirst_name())) {
                         found = true;
@@ -183,11 +179,10 @@ public class AddressBookDAO implements AddressBookInterface {
         });
     }
 
-
     /*Purpose : Using Java Streams to search for Person in a City or State across the multiple AddressBook.
                 Maintain Dictionary of City and Person as well as State and Person
-                Finally get the count of Persons by City or State using java streams
-      @since : 06.07.2021
+                Finally get the count of Persons by City or State
+      @since : 03.07.2021
     */
 
     @Override
@@ -212,10 +207,10 @@ public class AddressBookDAO implements AddressBookInterface {
                     for ( int k = 0; k < city.size(); k++)  {
                         if (city.get(k).equals(cityName)) {
                             firstName.add(value.get(k).getFirst_name());
+                            count.getAndIncrement();
                         }
                         person.put(cityName , firstName);
                     }
-                    count.addAndGet((int)firstName.stream().count());
                     hSearch.put(entry , person);
                 });
 
@@ -232,10 +227,10 @@ public class AddressBookDAO implements AddressBookInterface {
                     for ( int k = 0; k < city.size(); k++)  {
                         if (city.get(k).equals(stateName)) {
                             firstName.add(value.get(k).getFirst_name());
+                            count.getAndIncrement();
                         }
                         person.put(stateName , firstName);
                     }
-                    count.addAndGet((int)firstName.stream().count());
                     hSearch.put(entry , person);
                 });
 
@@ -243,5 +238,18 @@ public class AddressBookDAO implements AddressBookInterface {
         }
         System.out.println("\nViewing Persons by City or State\n" +hSearch);
         System.out.println("\nNumber of contact persons i.e. count by City or State is : " +count +"\n");
+    }
+
+    /**
+     * Purpose : Sort entries in the Address Book based on First Name aphabetically
+     *
+     * @since : 06.07.2021
+     */
+
+    public void sortPerson() {
+        personInfoDict.keySet().forEach(entry -> {
+            List<PersonInfo> data = personInfoDict.get(entry).stream().sorted(Comparator.comparing(PersonInfo::getFirst_name)).collect(Collectors.toList());
+            System.out.println(data);
+        });
     }
 }

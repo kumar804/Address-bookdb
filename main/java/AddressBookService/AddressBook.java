@@ -42,6 +42,11 @@ public class AddressBook implements AddressBookInterface{
     public void searchPerson() {
         addressBookDAO.searchPerson();
     }
+
+    @Override
+    public void sortPerson() {
+        addressBookDAO.sortPerson();
+    }
 }
 
 
