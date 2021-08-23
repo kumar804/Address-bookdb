@@ -14,7 +14,7 @@ public class AddressBook implements AddressBookInterface{
     }
 
     @Override
-    public void updateContact(String replacedContact, java.util.Hashtable<String, ArrayList<PersonInfo>> personInfoDict) {
+    public void updateContact(String replacedContact, Hashtable<String, ArrayList<PersonInfo>> personInfoDict) {
         addressBookDAO.updateContact(replacedContact, personInfoDict);
     }
 
@@ -43,3 +43,4 @@ public class AddressBook implements AddressBookInterface{
         addressBookDAO.searchPerson();
     }
 }
+
