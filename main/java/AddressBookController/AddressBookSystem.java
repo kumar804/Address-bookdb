@@ -1,7 +1,6 @@
 package AddressBookController;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.Scanner;
 
 class PersonInfo {
@@ -143,11 +142,22 @@ class AddressBook {
         //updates the details of the persons
         persons.set(index, new PersonInfo(first_name, last_name, address, city, state, zip, phone_number, email));
     }
+    public void deleteContact(String deletedName) {
+        int index = findContact(deletedName);
+        //checks if entered name matches first name of any person if yes then edit the persons details
+        if(index >= 0) {
+            if (deletedName.equals(persons.get(index).first_name)) {
+                persons.remove(index);
+                System.out.println("Contact in Address Book Deleted.");
+            }
+        }
+    }
 }
 public class AddressBookSystem {
     private static final int ADD = 1;
     private static final int EDIT = 2;
-    private static final int QUIT = 3;
+    private static final int DELETE = 3;
+    private static final int QUIT = 4;
     static AddressBook add_Book = new AddressBook();
 
     public static void main(String args[]){
@@ -165,12 +175,21 @@ public class AddressBookSystem {
         }
         else
             System.out.println("Thank you!");
+        System.out.print("Do you want to continue: Y/N ");
+        ans = input.next().toString();
+        if(ans.equals("Y")) {
+            option = menu(input);
+            performFunction(option, input);
+        }
+        else
+            System.out.println("Thank you!");
     }
     public static int menu(Scanner input) {
         System.out.println("Select option: ");
         System.out.println("1. Add a new contact in the address book.");
         System.out.println("2. Edit contact in the address book.");
-        System.out.println("3. Quit.");
+        System.out.println("3. Delete contact in the address book.");
+        System.out.println("4. Quit.");
         int option = input.nextInt();
 
         return option;
@@ -191,6 +210,11 @@ public class AddressBookSystem {
                 String replacedName = input.next().toString();
                 add_Book.updateContact(replacedName);
                 break;
+            case DELETE:
+                System.out.println("Enter the name of the contact that you want to delete");
+                String deletedName = input.next().toString();
+                add_Book.deleteContact(deletedName);
+                break;
             case QUIT:
                 System.out.println("Thank you for referring the address book.");
                 break;
@@ -198,7 +222,6 @@ public class AddressBookSystem {
                 System.out.println("Wrong Option! Please check for the option correctly!");
                 break;
         }
-
         //Display the values
         add_Book.display(add_Book.persons);
 
