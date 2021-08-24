@@ -53,7 +53,7 @@ public class AddressBookSystem {
                     flag = true;
                     break;
                 case SORT_DATA:
-                    System.out.println("\n" + "Sort Address Book based on First Name of the Person");
+                    System.out.println("\n" + "Sort Address Book");
                     add_Book.sortPerson();
                     flag = true;
                     break;
